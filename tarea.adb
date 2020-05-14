@@ -1,71 +1,71 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
-with Ada.Numerics.Float_Random;
-with Semaforos;
+with Ada.Numerics.Discrete_Random;
+
 
 procedure Tarea is
 
-  package Paquete_Semaforos is new Semaforos;
+   cantidad_de_sillar : Integer := 4; --Sillas disponbles en la consulta
+   estado_del_dentista : Integer := 1; --SEÑAL [1] esta despierto
 
-  use Paquete_Semaforos;
-  Semaforo: TSemaforo;
+   task type Dentista(b: natural);
+   task type pacientes(e: natural);
 
-       task Pizzero;
-    task Comensal;
+    task body Dentista is
 
-    PizzasEnElMeson : Integer := 0;
-    turno : Integer := 0;
+   begin
 
-    task body Pizzero is
-        tmp : Integer := 0;
-    begin
-        for i in 1..10 loop
-            put_line("   preparare una pizza");
-            delay(1.0); -- demora en preparar pizza
-            put_line("   prepare la pizza, la pondre al meson");
+      put_line("Dentista: Se me acaba el argumento, y la metodologia");
+      put_line("Cada vez que se aparece frente, a mi tu anatomia");
+      new_line;
 
-	Wait (Semaforo);
+   end Dentista;
 
 
-            tmp :=  PizzasEnElMeson;
-            tmp :=  tmp + 1;
-            put_line("   poniendo la pizza en el meson");
-            PizzasEnElMeson := tmp;
+   task body pacientes is
+
+      type Rand_Range is range 30..45;
+      package Rand_Int is new Ada.Numerics.Discrete_Random(Rand_Range);
+      seed : Rand_Int.Generator;
+      Num : Rand_Range;
+      I : Integer;
+
+   begin
+      Rand_Int.Reset(seed);
+      Num := Rand_Int.Random(seed);
+      I := Integer'Value (Rand_Range'Image(Num));
+
+      Put(I);
 
 
-        Signal (Semaforo);
 
-            put("***** hay");put(PizzasEnElMeson);put_line(" pizzas");
+
+      for i in 1..7 loop
+         if (i rem 2) = 0 then
+            put("Enano ");
+            put(i);
+            put(" : puedo escribir los versos mas tristes esta noche");
+            new_line;
+
+         else
+            put("Enano ");
+            put(i);
+            put(" : Cumpleanios feliz, te deseamos a ti");
+            new_line;
+            end if;
         end loop;
-    end Pizzero;
+
+   end pacientes;
 
 
-    task body Comensal is
-        tmp : Integer := 0;
-    begin
-        for i in 1..10 loop
+   type elDentista is access Dentista;
+   type losPacientes is access pacientes;
 
-            put_line("voy a sacar una pizza");
+   DentistaAtiende : elDentista;
+   pacienteAtendido: losPacientes;
 
-            Wait (Semaforo);
-
-            tmp :=  PizzasEnElMeson;
-            put_line("accediendo al meson");
-            tmp :=  tmp - 1;
-            PizzasEnElMeson := tmp;
-
-            Signal (Semaforo);
-
-            put_line("me voy a comer la pizza");
-            delay(10.0); -- demora en comer pizza
-            put_line("me comi la pizza");
-
-            put("$$$$ HAY");put(PizzasEnElMeson);put_line(" PIZZAS");
-        end loop;
-    end Comensal;
-
-
-begin  -- Aquí se inicia la tarea de tipo TSemaforo (objeto Semaforo).
-  null;
+begin
+    DentistaAtiende := new Dentista(20);
+    pacienteAtendido := new pacientes(21);
 
 end Tarea;
