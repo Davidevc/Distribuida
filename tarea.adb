@@ -10,7 +10,8 @@ procedure Tarea is
    atiende_dentista : Boolean := True; --SEÑAL [0] esta en cierto
    atiende_paciente : Boolean := True; --SEÑAL [1] esta en CIERTO
    turno : Integer := 0;
-   estado : Boolean;
+   estado : Boolean := False;
+   turno_paciente : Integer := 1;
 
    task type Dentista(b: natural);
    task type pacientes(e: natural);
@@ -19,18 +20,25 @@ procedure Tarea is
     task body Dentista is
 
    begin
-      Put_Line("Soy el dentista, estoy atendiendo");
+
+      Put("soy el dentista estoy atendiendo");
+      New_Line;
+
+      while (b /= turno_paciente) loop
+
       while (atiende_paciente=True)loop
+
          atiende_dentista := False;
 
-         	while(turno /= 0) loop
-            	null;
-         	end loop;
-
-         atiende_dentista := True;
+         while(turno /= 0) loop
+            null;
+         end loop;
+      atiende_dentista := True;
       end loop;
 
       -- SECCION CRITICA
+      Put("Siguiente");
+      New_Line;
       estado := True;
       delay(1.0);
       -- SECCION CRITICA
@@ -38,18 +46,23 @@ procedure Tarea is
       turno := 1;
       atiende_dentista := False;
 
+      end loop;
+
+      Put_Line("Dentista: me dormi");
+
    end Dentista;
 
    -- ********************************PACIENTE**************************************
    task body pacientes is
 
-      type Rand_Range is range 2..5; -- hay que cambiarlo a 30..45
+      type Rand_Range is range 30..45; -- hay que cambiarlo a 30..45
       package Rand_Int is new Ada.Numerics.Discrete_Random(Rand_Range);
       seed : Rand_Int.Generator;
       Num : Rand_Range;
       voy_a_esperar : Integer;
       me_atendieron : Boolean := False;
       tmp : Integer := 0;
+      sg : Integer := 0;
 
    begin
       Rand_Int.Reset(seed);
@@ -62,6 +75,9 @@ procedure Tarea is
 
             Put("Paciente");Put(e);Put(" : ");Put_Line("me voy");
             New_Line;
+            sg :=  turno_paciente;
+            sg :=  turno_paciente + 1;
+            turno_paciente := sg;
             exit;
             --cantidad_de_sillas := 1;
 
@@ -75,11 +91,11 @@ procedure Tarea is
             tmp :=  tmp - 1;
             cantidad_de_sillas := tmp;
 
-            while (estado_del_dentista = 1) loop
+            while (estado_del_dentista = 1) or (turno_paciente /= e) loop
                delay(0.1);
                end loop;
 
-            if(estado_del_dentista = 0) then
+            if(estado_del_dentista = 0) and (turno_paciente = e) then
                estado_del_dentista := 1;
 
                tmp :=  cantidad_de_sillas;
@@ -98,34 +114,40 @@ procedure Tarea is
                		end loop;
                   atiende_paciente := True;
 
-            end loop;
+               end loop;
 
                -- SECCION CRITICA
                Put("Paciente");Put(e);Put(" : ");Put("estoy siendo atendido");
                New_Line;
-               delay(20.0);
+               delay(10.0);
                me_atendieron := estado;
                estado := False;
+               Put("Paciente");Put(e);Put(" : ");Put("Ya me atendieron , adios, me voy");
+               New_Line;
 
             -- SECCION CRITICA
 
                turno := 0;
                atiende_paciente := False;
-               Put("Paciente");Put(e);Put(" : ");Put("adios, me voy");
-               New_Line;
+
                estado_del_dentista :=0;
+
+               sg :=  turno_paciente;
+               sg :=  turno_paciente + 1;
+               turno_paciente := sg;
 
              -- //////////////////////////////DEKKER/////////////////////////////////
 
-               exit;
+
             end if;
 
 
          elsif (cantidad_de_sillas = 0) then
 
             voy_a_esperar := voy_a_esperar -1;
-            Put("Paciente");Put(e);Put(" : ");Put(voy_a_esperar); --  SOLO PARA SABER EL TIEMPO DE ESPERA, LUEGO ELIMINAR
-            New_Line;--  SOLO PARA SABER EL TIEMPO DE ESPERA, LUEGO ELIMINAR
+            delay(1.0);
+            --Put("Paciente");Put(e);Put(" : ");Put(voy_a_esperar); --  SOLO PARA SABER EL TIEMPO DE ESPERA, LUEGO ELIMINAR
+            --New_Line;--  SOLO PARA SABER EL TIEMPO DE ESPERA, LUEGO ELIMINAR
 
          end if;
       end loop;
@@ -144,7 +166,7 @@ procedure Tarea is
    DentistaAtiende : elDentista;
    pacienteAtendido: losPacientes;
 
-   type Rand_Range is range 1..5; -- hay que cambiarlo a 30..45
+   type Rand_Range is range 1..10;
    package Rand_Int is new Ada.Numerics.Discrete_Random(Rand_Range);
    seed : Rand_Int.Generator;
    Num : Rand_Range;
@@ -157,7 +179,7 @@ begin
    Num := Rand_Int.Random(seed);
    llegada := Duration'Value (Rand_Range'Image(Num));
 
-   DentistaAtiende := new Dentista(20);
+   DentistaAtiende := new Dentista(10);
    for i in 1..10 loop
    delay(llegada);
    pacienteAtendido := new pacientes(i);
