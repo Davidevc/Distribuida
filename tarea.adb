@@ -6,11 +6,11 @@ with Ada.Numerics.Discrete_Random;
 procedure Tarea is
 
    cantidad_de_sillas : Integer := 4; --Sillas disponbles en la consulta
-   estado_del_dentista : Integer := 1; --SEÑAL [1] esta despierto
+   estado_del_dentista : Integer := 0; --SEÑAL [1] 0 esta dormido ,1 esta despierto
    atiende_dentista : Boolean := True; --SEÑAL [0] esta en cierto
    atiende_paciente : Boolean := True; --SEÑAL [1] esta en CIERTO
    turno : Integer := 0;
-   estado : Boolean;
+   --estado : Boolean;
 
    task type Dentista(b: natural);
    task type pacientes(e: natural);
@@ -19,27 +19,7 @@ procedure Tarea is
     task body Dentista is
 
    begin
-
-      while (atiende_paciente=True)loop
-         delay(1.0);
-         atiende_dentista := False;
-
-         	while(turno /= 0) loop
-            	null;
-         	end loop;
-
-         atiende_dentista := True;
-      end loop;
-
-      -- SECCION CRITICA
-      estado := True;
-      Put_Line("Soy el dentista, estoy atendiendo");
-      delay(1.0);
-      -- SECCION CRITICA
-
-      turno := 1;
-      atiende_dentista := False;
-
+      null;
    end Dentista;
 
    -- ********************************PACIENTE**************************************
@@ -77,31 +57,18 @@ procedure Tarea is
             tmp :=  cantidad_de_sillas;
             tmp :=  tmp - 1;
             cantidad_de_sillas := tmp;
-            -- SECCION CRITICA
-            -- //////////////////////////////DEKKER/////////////////////////////////
-            while (atiende_dentista=True)loop
-               delay(1.0);
-               atiende_paciente := False;
 
-         		while(turno /= 1) loop
-            		null;
-         		end loop;
+            while (estado_del_dentista = 1) loop
+               null;
+               end loop;
 
-               atiende_paciente := True;
-            end loop;
+            if(estado_del_dentista = 0) then
+               estado_del_dentista := 1;
+               me_atendieron := True;
+               Put("Paciente");Put(e);Put(" : ");Put("estoy siendo atendido");
 
-            -- SECCION CRITICA
-            me_atendieron := estado;
-            Put("Paciente");Put(e);Put(" : ");Put("Me Atendieron, adios");
-            New_Line;
-            delay(1.0);
-            -- SECCION CRITICA
+            end if;
 
-            turno := 0;
-            atiende_paciente := False;
-            estado := False;
-            exit;
-             -- //////////////////////////////DEKKER/////////////////////////////////
 
          elsif (cantidad_de_sillas = 0) then
 
