@@ -128,11 +128,10 @@ procedure Tarea is
 -- ********************************PROGRAMA INICIO**************************************
 begin
 
-
+   DentistaAtiende := new Dentista(20);
    for i in 1..3 loop
    delay(0.3);
-      pacienteAtendido := new pacientes(i);
-      DentistaAtiende := new Dentista(i);
+   pacienteAtendido := new pacientes(i);
    end loop;
 
 end Tarea;
