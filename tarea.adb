@@ -5,11 +5,11 @@ with Ada.Numerics.Discrete_Random;
 
 procedure Tarea is
 
-   cantidad_de_sillas : Integer := 2; --Sillas disponbles en la consulta
+   cantidad_de_sillas : Integer := 4; --Sillas disponbles en la consulta
    estado_del_dentista : Integer := 1; --SEÑAL [1] esta despierto
-   atiende_dentista : Integer := 0; --SEÑAL [0] esta en cierto
-   atiende_paciente : Integer := 1; --SEÑAL [1] esta en CIERTO
-   turno : Integer := 1;
+   atiende_dentista : Boolean := True; --SEÑAL [0] esta en cierto
+   atiende_paciente : Boolean := True; --SEÑAL [1] esta en CIERTO
+   turno : Integer := 0;
    estado : Boolean;
 
    task type Dentista(b: natural);
@@ -20,24 +20,25 @@ procedure Tarea is
 
    begin
 
-      while (atiende_paciente/=0)loop
-         null;
+      while (atiende_paciente=True)loop
+         delay(1.0);
+         atiende_dentista := False;
+
+         	while(turno /= 0) loop
+            	null;
+         	end loop;
+
+         atiende_dentista := True;
       end loop;
 
-         if(turno = 1)then
-            atiende_dentista := 1;
-         while(turno = 1) loop
-            null;
-            end loop;
-               Put_Line("atendiendo");
-               delay(1.0);
-               atiende_dentista := 0;
-         end if;
+      -- SECCION CRITICA
+      estado := True;
+      Put_Line("Soy el dentista, estoy atendiendo");
+      delay(1.0);
+      -- SECCION CRITICA
 
-         estado := True;
-
-         turno := 1;
-         atiende_dentista := 1;
+      turno := 1;
+      atiende_dentista := False;
 
    end Dentista;
 
@@ -62,7 +63,8 @@ procedure Tarea is
 
          if (voy_a_esperar = 0) then
 
-            Put_Line("me voy");
+            Put("Paciente");Put(e);Put(" : ");Put_Line("me voy");
+            New_Line;
             exit;
             --cantidad_de_sillas := 1;
 
@@ -76,31 +78,30 @@ procedure Tarea is
             tmp :=  tmp - 1;
             cantidad_de_sillas := tmp;
             -- SECCION CRITICA
+            -- //////////////////////////////DEKKER/////////////////////////////////
+            while (atiende_dentista=True)loop
+               delay(1.0);
+               atiende_paciente := False;
 
-            while (atiende_dentista/=0) loop
-            null;
+         		while(turno /= 1) loop
+            		null;
+         		end loop;
+
+               atiende_paciente := True;
             end loop;
 
-               if(turno=0)then
-                  atiende_paciente := 0;
-               while(turno=0) loop
-                  null;
-                  end loop;
-                     Put_Line("atendidoooooooo");
-                     delay(1.0);
-                     atiende_paciente := 1;
+            -- SECCION CRITICA
+            me_atendieron := estado;
+            Put("Paciente");Put(e);Put(" : ");Put("Me Atendieron, adios");
+            New_Line;
+            delay(1.0);
+            -- SECCION CRITICA
 
-               end if;
-
-               me_atendieron := estado;
-               Put("Paciente");Put(e);Put(" : ");Put("me atendieron, adios");
-               New_Line;
-
-               turno := 0;
-               atiende_paciente := 0;
-
-
+            turno := 0;
+            atiende_paciente := False;
+            estado := False;
             exit;
+             -- //////////////////////////////DEKKER/////////////////////////////////
 
          elsif (cantidad_de_sillas = 0) then
 
@@ -128,11 +129,10 @@ procedure Tarea is
 -- ********************************PROGRAMA INICIO**************************************
 begin
 
-
-   for i in 1..3 loop
+   DentistaAtiende := new Dentista(20);
+   for i in 1..6 loop
    delay(0.3);
-      pacienteAtendido := new pacientes(i);
-      DentistaAtiende := new Dentista(i);
+   pacienteAtendido := new pacientes(i);
    end loop;
 
 end Tarea;
