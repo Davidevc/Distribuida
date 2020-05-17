@@ -10,7 +10,7 @@ procedure Tarea is
    atiende_dentista : Boolean := True; --SEÑAL [0] esta en cierto
    atiende_paciente : Boolean := True; --SEÑAL [1] esta en CIERTO
    turno : Integer := 0;
-   --estado : Boolean;
+   estado : Boolean;
 
    task type Dentista(b: natural);
    task type pacientes(e: natural);
@@ -19,7 +19,25 @@ procedure Tarea is
     task body Dentista is
 
    begin
-      null;
+      Put_Line("Soy el dentista, estoy atendiendo");
+      while (atiende_paciente=True)loop
+         atiende_dentista := False;
+
+         	while(turno /= 0) loop
+            	null;
+         	end loop;
+
+         atiende_dentista := True;
+      end loop;
+
+      -- SECCION CRITICA
+      estado := True;
+      delay(1.0);
+      -- SECCION CRITICA
+
+      turno := 1;
+      atiende_dentista := False;
+
    end Dentista;
 
    -- ********************************PACIENTE**************************************
@@ -39,7 +57,6 @@ procedure Tarea is
       voy_a_esperar := Integer'Value (Rand_Range'Image(Num));
 
       while (me_atendieron = False) loop
-         delay(1.0);
 
          if (voy_a_esperar = 0) then
 
@@ -59,14 +76,48 @@ procedure Tarea is
             cantidad_de_sillas := tmp;
 
             while (estado_del_dentista = 1) loop
-               null;
+               delay(0.1);
                end loop;
 
             if(estado_del_dentista = 0) then
                estado_del_dentista := 1;
-               me_atendieron := True;
-               Put("Paciente");Put(e);Put(" : ");Put("estoy siendo atendido");
 
+               tmp :=  cantidad_de_sillas;
+               tmp :=  tmp + 1;
+               cantidad_de_sillas := tmp;
+
+
+
+                -- //////////////////////////////DEKKER/////////////////////////////////
+               while (atiende_dentista=True)loop
+
+               atiende_paciente := False;
+
+         		while(turno /= 1) loop
+            		null;
+               		end loop;
+                  atiende_paciente := True;
+
+            end loop;
+
+               -- SECCION CRITICA
+               Put("Paciente");Put(e);Put(" : ");Put("estoy siendo atendido");
+               New_Line;
+               delay(20.0);
+               me_atendieron := estado;
+               estado := False;
+
+            -- SECCION CRITICA
+
+               turno := 0;
+               atiende_paciente := False;
+               Put("Paciente");Put(e);Put(" : ");Put("adios, me voy");
+               New_Line;
+               estado_del_dentista :=0;
+
+             -- //////////////////////////////DEKKER/////////////////////////////////
+
+               exit;
             end if;
 
 
@@ -93,12 +144,22 @@ procedure Tarea is
    DentistaAtiende : elDentista;
    pacienteAtendido: losPacientes;
 
+   type Rand_Range is range 1..5; -- hay que cambiarlo a 30..45
+   package Rand_Int is new Ada.Numerics.Discrete_Random(Rand_Range);
+   seed : Rand_Int.Generator;
+   Num : Rand_Range;
+   llegada : Duration;
+
+
 -- ********************************PROGRAMA INICIO**************************************
 begin
+   Rand_Int.Reset(seed);
+   Num := Rand_Int.Random(seed);
+   llegada := Duration'Value (Rand_Range'Image(Num));
 
    DentistaAtiende := new Dentista(20);
-   for i in 1..6 loop
-   delay(0.3);
+   for i in 1..10 loop
+   delay(llegada);
    pacienteAtendido := new pacientes(i);
    end loop;
 
