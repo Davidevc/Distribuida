@@ -21,7 +21,7 @@ procedure Tarea is
 
    begin
 
-      Put("soy el dentista estoy atendiendo");
+      Put("Soy el dentista estoy atendiendo");
       New_Line;
 
       while (b /= turno_paciente) loop
@@ -32,12 +32,13 @@ procedure Tarea is
 
          while(turno /= 0) loop
             null;
-         end loop;
+            end loop;
+
       atiende_dentista := True;
       end loop;
 
       -- SECCION CRITICA
-      Put("Siguiente");
+      Put("Dentista : Que pase el Siguiente");
       New_Line;
       estado := True;
       delay(1.0);
@@ -55,19 +56,19 @@ procedure Tarea is
    -- ********************************PACIENTE**************************************
    task body pacientes is
 
-      type Rand_Range is range 30..45; -- hay que cambiarlo a 30..45
+      type Rand_Range is range 30..45; -- entre 30 y 45 segundos simulando minutos como se estima en la actividad
       package Rand_Int is new Ada.Numerics.Discrete_Random(Rand_Range);
       seed : Rand_Int.Generator;
       Num : Rand_Range;
       voy_a_esperar : Integer;
-      me_atendieron : Boolean := False;
-      tmp : Integer := 0;
-      sg : Integer := 0;
+      me_atendieron : Boolean := False; -- ¿ha sido atendido?
+      tmp : Integer := 0; -- cantidad de sillas
+      sg : Integer := 0; -- Corresponde al turno siguiente
 
    begin
       Rand_Int.Reset(seed);
       Num := Rand_Int.Random(seed);
-      voy_a_esperar := Integer'Value (Rand_Range'Image(Num));
+      voy_a_esperar := Integer'Value (Rand_Range'Image(Num)); -- queda con un numero entre 30 y 45
 
       while (me_atendieron = False) loop
 
@@ -156,7 +157,7 @@ procedure Tarea is
    DentistaAtiende : elDentista;
    pacienteAtendido: losPacientes;
 
-   type Rand_Range is range 1..5;
+   type Rand_Range is range 1..5; -- Los pacientes llegan de forma aleatorea
    package Rand_Int is new Ada.Numerics.Discrete_Random(Rand_Range);
    seed : Rand_Int.Generator;
    Num : Rand_Range;
@@ -167,9 +168,9 @@ procedure Tarea is
 begin
    Rand_Int.Reset(seed);
    Num := Rand_Int.Random(seed);
-   llegada := Duration'Value (Rand_Range'Image(Num));
+   llegada := Duration'Value (Rand_Range'Image(Num)); -- hasta aca el random
 
-   DentistaAtiende := new Dentista(10);
+   DentistaAtiende := new Dentista(15);
    for i in 1..15 loop
    delay(llegada);
    pacienteAtendido := new pacientes(i);
