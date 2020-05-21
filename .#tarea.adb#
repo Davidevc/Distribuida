@@ -7,8 +7,6 @@ procedure Tarea is
 A, B, C : Integer;
 begin
    C := Increment_By;
-   --              ^ Parameterless call, value of I is 0
-   --                and Incr is 1
 
    Put_Line ("Using defaults for Increment_By is "
              & Integer'Image (C));
