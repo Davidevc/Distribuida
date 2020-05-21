@@ -1,6 +1,7 @@
 function Increment_By
   (I    : Integer := 0;
-   Incr : Integer := 1) return Integer is
+   Incr : Integer := 1;
+   multp: Integer := 4) return Integer is
 begin
-   return I + Incr;
+   return (I + Incr)*multp;
 end Increment_By;
