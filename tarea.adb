@@ -3,22 +3,18 @@ with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 with Increment_By;
 
 procedure Tarea is
-
-   A, B, C, D : Integer;
-
-   procedure Display_Result is
+   procedure Swap (A, B : in out Integer) is --NECESARIO PARA USAR VARIABLES PASADAS POR PROCEDIMIENTO
+      -- IN OUT PERMITE EL ACCESO DE LECTURA Y ESCRITURA DEL OBJETO PASADO COMO PARAMETRO.
+      Tmp : Integer;
    begin
-      Put_Line ("Increment of " & Integer'Image (A)
-                & " with "      & Integer'Image (B)
-                & " multiple "  & Integer'Image (D)
-                & " is "        & Integer'Image (C));
-   end Display_Result;
+      Tmp := A;
+      A := B;
+      B := Tmp;
+   end Swap;
 
-
+   A : Integer := 12;
+   B : Integer := 44;
 begin
-   A := 10;
-   B := 3;
-   D := 10;
-   C := Increment_By (A, B, D);
-   Display_Result;
+    Swap (A, B);
+    Put_Line (Integer'Image (A)); --  Prints 44
 end Tarea;
