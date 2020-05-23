@@ -3,18 +3,26 @@ with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 with Increment_By;
 
 procedure Tarea is
-   procedure Swap (A, B : in out Integer) is --NECESARIO PARA USAR VARIABLES PASADAS POR PROCEDIMIENTO
-      -- IN OUT PERMITE EL ACCESO DE LECTURA Y ESCRITURA DEL OBJETO PASADO COMO PARAMETRO.
-      Tmp : Integer;
-   begin
-      Tmp := A;
-      A := B;
-      B := Tmp;
-   end Swap;
+    procedure Compute_A (V : Natural);
+    --  Forward declaration of Compute_A
 
-   A : Integer := 12;
-   B : Integer := 44;
+    procedure Compute_B (V : Natural) is
+    begin
+      if V > 5 then
+         Put(V);
+          Compute_A (V - 1);
+         --  Call to Compute_A
+       end if;
+    end Compute_B;
+
+    procedure Compute_A (V : Natural) is
+    begin
+      if V > 2 then
+         Put(V);
+         Compute_B (V - 1);
+          --  Call to Compute_B
+       end if;
+    end Compute_A;
 begin
-    Swap (A, B);
-    Put_Line (Integer'Image (A)); --  Prints 44
+   Compute_A (15);
 end Tarea;
