@@ -1,10 +1,9 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
-with Week.Child;   use Week.Child;
-with Week.Child_2; use Week.Child_2;
+with Book.Additional_Operations; use Book.Additional_Operations;
 
 procedure Tarea is
 begin
-   Put_Line ("First day of the week is " & Get_First_Of_Week);
-   Put_Line ("Last day of the week is "  & Get_Last_Of_Week);
+   Put_Line (Get_Extended_Title);
+   Put_Line (Get_Extended_Author);
 end Tarea;
