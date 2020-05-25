@@ -1,15 +1,18 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 procedure Tarea is
-   type Mod_Int is mod 2 ** 5; --el resto que sobrepasa o que no alcanza
-   --              ^ Range is 0 .. 31
-
-   A : Mod_Int := 20;
-   B : Mod_Int := 15;
-   M : Mod_Int := A + B -10;
-   --  No overflow here, M = (20 + 15) mod 32 = 3
+ type Days is (Monday, Tuesday, Wednesday,
+                 Thursday, Friday, Saturday, Sunday);
+   --  An enumeration type
 begin
-   for I in 1 .. M loop
-      Put_Line ("Hello, World!");
+   for I in Days loop
+      case I is
+         when Saturday .. Sunday =>
+            Put_Line ("Week end!");
+
+         when Monday .. Friday =>
+            Put_Line ("Hello on " & Days'Image (I));
+            --  'Image attribute, works on enums too
+      end case;
    end loop;
 end Tarea;
