@@ -1,9 +1,9 @@
-with Ada.Text_IO; use Ada.Text_IO;
-with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
-with Book.Additional_Operations; use Book.Additional_Operations;
+with Ada.Text_IO;
 
 procedure Tarea is
+   package TIO renames Ada.Text_IO;
+   procedure Say (Something : String) renames Ada.Text_IO.Put_Line;
 begin
-   Put_Line (Get_Extended_Title);
-   Put_Line (Get_Extended_Author);
+   TIO.Put_Line ("Hello");
+   Say ("Hello con solo Say");
 end Tarea;
