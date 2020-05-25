@@ -1,15 +1,15 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 procedure Tarea is
-   type My_Int is range 1 .. 20;
-   A : My_Int := 12;
-   B : My_Int := 15; --no son definibles con valores sobre 20 o menores que 1
-   M : My_Int := (A + B) / 2;
-   --  No overflow here, overflow checks are done at
-   --  specific boundaries.
+   type Mod_Int is mod 2 ** 5; --el resto que sobrepasa o que no alcanza
+   --              ^ Range is 0 .. 31
+
+   A : Mod_Int := 20;
+   B : Mod_Int := 15;
+   M : Mod_Int := A + B -10;
+   --  No overflow here, M = (20 + 15) mod 32 = 3
 begin
    for I in 1 .. M loop
       Put_Line ("Hello, World!");
    end loop;
-   --  Loop body executed 13 times
 end Tarea;
