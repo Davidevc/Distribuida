@@ -1,21 +1,15 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 procedure Tarea is
- --  Declara un tipo entero con signo y da los limites
-   type My_Int is range -1 .. 20;--Cada declaración de tipo en Ada comienza con la typepalabra clave
-     				 --(excepto los tipos de tarea ).
-   --                         ^ limite alto
-   --                   ^ limite bajo
-
-   --  al igual que las variables, las declaraciones de tipo solo pueden aparecer en
-   --  regiones declarativas
+   type My_Int is range 1 .. 20;
+   A : My_Int := 12;
+   B : My_Int := 15; --no son definibles con valores sobre 20 o menores que 1
+   M : My_Int := (A + B) / 2;
+   --  No overflow here, overflow checks are done at
+   --  specific boundaries.
 begin
-   for I in My_Int loop --desde I (inicio) hasta todo el rango de la varialbe My_Int
-      Put_Line (My_Int'Image (I));
-      --              ^ 'Image attribute, converts a value to a
-      --                 String
+   for I in 1 .. M loop
+      Put_Line ("Hello, World!");
    end loop;
+   --  Loop body executed 13 times
 end Tarea;
-
---En Ada, un tipo entero no se especifica en términos de su representación de máquina,
---sino más bien por su rango. El compilador elegirá la representación más adecuada.
