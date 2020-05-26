@@ -1,22 +1,37 @@
 with Ada.Text_IO; use Ada.Text_IO;
---STRONG TYPING
+--TIPOS DERIVADOS
 procedure Tarea is
-    type Meters is new Float;
-   type Miles is new Float;
+   type Days is (Monday, Tuesday, Wednesday, Thursday,
+                 Friday, Saturday, Sunday);
 
-   --  Function declaration, like procedure but returns a value.
-   function To_Miles (M : Meters) return Miles is
-   --                             ^ Return type
-   begin
-      return (Miles (M) * 1609.0) / 1000.0;
-      --         ^ Type conversion, from Meters to Miles
-   --  Now the code is correct
-   end To_Miles;
+   type Weekend_Days is new Days range Saturday .. Sunday;
+   --  New type, where only Saturday and Sunday are valid literals.
 
-   Dist_Imperial : Miles;
-   Dist_Metric   : constant Meters := 100.0;
+   subtype Weekend_Days2 is Days range Saturday .. Sunday;
+   --                           ^ Constraint of the subtype
+
+   M : Days := Sunday;
+
+   S : Weekend_Days2 := M; -- s variable, weekend_days2 tipo de variable, su valor "m= sunday" si pernece al sub tipo.
+   --  No error here, Days and Weekend_Days are of the same type.
 begin
-   Dist_Imperial := To_Miles (Dist_Metric);
-   --ADA rechaza procedimientos en los cuales se mezclen variables. (FUERTEMENTE TIPADA)
-   Put_Line (Miles'Image (Dist_Imperial));
+   for I in Days loop
+      Put_Line (Days'Image (I));
+   end loop;
+
+   for I in Weekend_Days loop
+      Put_Line (Weekend_Days'Image (I));
+   end loop;
+
+   for I in Days loop
+      case I is
+         --  Just like a type, a subtype can be used as a
+         --  range
+         when Weekend_Days2 =>
+            Put_Line ("Week end!");
+         when others =>
+            Put_Line ("Hello on " & Days'Image (I));
+      end case;
+   end loop;
+
 end Tarea;
