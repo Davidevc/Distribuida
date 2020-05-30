@@ -6,65 +6,36 @@ with TipoSemaforos;
 procedure Tarea is
 package Paquete_Semaforos is new TipoSemaforos;
   use Paquete_Semaforos;
-  miSemaforo : TSemaforo;
+  completoListo : TSemaforo;
 
-  task Tarea1;
-  task Tarea2;
+  task Cocinero;
+  task Comedor;
 
-  VariableComun: Integer := 0;
+  task body Cocinero is
+   begin
+      delay(5.0);
+      for i in 1..5 loop
+         put("** voy a preparar un completo");New_Line;
+         delay(3.0);
+         Put("** prepare un completo");New_Line;
+         Signal(completoListo);
+      end loop;
 
-  task body Tarea1 is
-       tmpT1 : Integer := 100;
-       tmp : Integer;
-  begin
-    for i in 1..10 loop
-	Wait(miSemaforo);
-	 Put("{");
-	 tmp := VariableComun;
-         tmp := tmp+tmpT1;
-	 delay(0.1);
-	 VariableComun := tmp;
-	 Put("}");
-	Signal(miSemaforo);
+  end Cocinero;
 
-	for k in 1 .. 5 loop
-		put_line("mi mama me mima");
-	end loop;
-
+  task body Comedor is
+   begin
+      delay(1.0);
+      for i in 1..5 loop
+         Put("$$ espero por un completo"); New_Line;
+         Wait(completoListo);
+         Put("$$ tengo el completo en la mano");New_Line;
+         delay(2.0);
+         Put("$$ me lo comi");New_Line;
     end loop;
-  end Tarea1;
-
-  task body Tarea2 is
-       tmpT2 : Integer := 1000;
-       tmp : Integer;
-  begin
-    for i in 1..10 loop
-	Wait(miSemaforo);
-	   Put("[");
-	   tmp := VariableComun;
-           tmp := tmp+tmpT2;
-	   delay(0.1);
-	   VariableComun := tmp;
-	   Put("]");
-	Signal(miSemaforo);
-
-	for k in 1 .. 5 loop
-		put_line("2+2=4");
-	end loop;
-
-    end loop;
-
-
-  end Tarea2;
+  end Comedor;
 
 begin
-     for i in 1..10 loop
-	Wait(miSemaforo);
-           Put("<");
-           Put(VariableComun);
-           Put(">");
-	Signal(miSemaforo);
-     end loop;
-	Delay(3.0);
-        Put(VariableComun);
+   Wait(completoListo);
+   put("solo baje el contador a 0");New_Line;
 end Tarea;
