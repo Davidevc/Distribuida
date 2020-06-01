@@ -8,19 +8,15 @@ procedure Tarea is
 package Paquete_Semaforos is new TipoSemaforos;
    use Paquete_Semaforos;
    use Maquinaria;
-
    Semaforo1 : TSemaforo;
+   task Armador_Bicicleta;
 
+   task body Armador_Bicicleta is
 
-  task Arma_Bicicleta;
-
-   task body Arma_Bicicleta is
-      Sillin : Boolean;
-      Marco : Boolean;
    begin
-      Sillin := Maquina_Sillin;
-      Marco := Maquina_Marco;
-  end Arma_Bicicleta;
+      armarBicicleta;
+      Put_Line("Tengo Todas las piezas, la arme");
+  end Armador_Bicicleta;
 
 
 begin
