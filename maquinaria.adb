@@ -9,16 +9,16 @@ package Paquete_Semaforos is new TipoSemaforos;
       task Maquina_Sillin;
       task Maquina_Marco;
       task Maquina_Ruedas;
-      --task Maquina_Canastito;
-      --task Maquina_Frenos;
-      --task Maquina_Pedales;
+      task Maquina_Canastito;
+      task Maquina_Frenos;
+      task Maquina_Pedales;
       
       --************************* MAQUINA SILLIN *******************************
       task body Maquina_Sillin is
       begin
          Put_Line("MAQUINA SILLIN: Comienzo sillin");
          delay(4.0);
-         Put_Line("MAQUINA SILLIN: Sillin Listo");
+         Put_Line("MAQUINA SILLIN: Sillin listo");
       end Maquina_Sillin;
       --************************* MAQUINA SILLIN *******************************
       
@@ -34,7 +34,7 @@ package Paquete_Semaforos is new TipoSemaforos;
          begin
             Put_Line("MAQUINA FUNDIDORA: Comienzo a fundir");
             delay(7.0);
-            Put_Line("MAQUINA FUNDIDORA: Fundido Listo");
+            Put_Line("MAQUINA FUNDIDORA: Fundido listo");
             Signal(SemaforoFunde);
          end Funde;
    
@@ -45,7 +45,7 @@ package Paquete_Semaforos is new TipoSemaforos;
             Wait(SemaforoFunde);
             Put_Line("MAQUINA PINTADO: Puedo pintar y pinto");
             delay(4.0);
-            Put_Line("MAQUINA PINTADO: Pintado Listo");
+            Put_Line("MAQUINA PINTADO: Pintado listo");
             Signal(MarcoListo);
          end Pinta;
       
@@ -84,6 +84,34 @@ package Paquete_Semaforos is new TipoSemaforos;
          end loop;
       end Maquina_Ruedas;
       --************************* MAQUINA RUEDA *******************************
+      
+      --************************* MAQUINA CANASTITO ****************************
+      task body Maquina_Canastito is         
+      begin
+         Put_Line("MAQUINA CANASTITO: Comienzo el canastito");
+         delay(7.0);
+         Put_Line("MAQUINA CANASTITO: Canastito listo");
+      end Maquina_Canastito;
+      --************************* MAQUINA CANASTITO ****************************
+      
+      --************************* MAQUINA FRENOS *******************************
+      task body Maquina_Frenos is
+      begin
+         Put_Line("MAQUINA FRENOS: Comienzo los frenos");
+         delay(3.0);
+         Put_Line("MAQUINA FRENOS: Frenos listos");
+      end Maquina_Frenos;
+      --************************* MAQUINA FRENOS *******************************
+
+      --************************* MAQUINA PEDALES ******************************
+      task body Maquina_Pedales is 
+      begin
+         Put_Line("MAQUINA PEDALES: Comienzo los pedales");
+         delay(10.0);
+         Put_Line("MAQUINA PEDALES: Pedales listos");
+      end Maquina_Pedales;
+      --************************* MAQUINA PEDALES ******************************
+      
    begin
       null;  
    end armarBicicleta;
