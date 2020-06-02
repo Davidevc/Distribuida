@@ -14,8 +14,9 @@ package Paquete_Semaforos is new TipoSemaforos;
    task body Armador_Bicicleta is
 
    begin
+      Put_Line("OPERARIO A: Enciendo las maquinas para la bicicleta");
       armarBicicleta;
-      Put_Line("Tengo Todas las piezas, la arme");
+      Put_Line("OPERARIO A: Tengo Todas las piezas, la arme");
   end Armador_Bicicleta;
 
 
